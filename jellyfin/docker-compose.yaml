@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: always
+    user: "$PUID:$PGID"
+    network_mode: host
+    volumes:
+      - ${CONFIG_PATH}/jellyfin/config/:/config/
+      - ${CONFIG_PATH}/jellyfin/cache/:/cache/
+      - ${VIDEOS_PATH}/:/media/

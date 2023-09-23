@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  qbittorrentvpn:
+    restart: always
+    image: oxidand/qbittorrentvpn
+    container_name: qbittorrentvpn
+    environment:
+      - VPN_ENABLED=yes
+      - NAME_SERVERS=1.1.1.1,1.0.0.1
+      - LAN_NETWORK=${LAN_NETWORK}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+    ports:
+      - 8080:8080
+    volumes:
+      - ${CONFIG_PATH}/qBittorrent/:/config/
+      - ${DOWNLOADS_PATH}/:/downloads/
+      - /etc/localtime:/etc/localtime:ro
+    privileged: true
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun

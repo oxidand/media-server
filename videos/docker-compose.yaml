@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  sonarr:
+    restart: always
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - 8989:8989
+    volumes:
+      - ${CONFIG_PATH}/sonarr/:/config/
+      - ${VIDEOS_PATH}/TV/:/tv/
+      - ${DOWNLOADS_PATH}/:/downloads/
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - default
+      - jackett_default
+      - torrent_default
+  
+  radarr:
+    restart: always
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - 7878:7878
+    volumes:
+      - ${CONFIG_PATH}/radarr:/config/
+      - ${VIDEOS_PATH}/Movie/:/movies/
+      - ${DOWNLOADS_PATH}/:/downloads/
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - default
+      - jackett_default
+      - torrent_default
+
+  bazarr:
+    restart: always
+    image: lscr.io/linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - 6767:6767
+    volumes:
+      - ${CONFIG_PATH}/bazarr/:/config/
+      - ${VIDEOS_PATH}/Movie/:/movies/
+      - ${VIDEOS_PATH}/TV/:/tv/
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - default
+
+networks:
+  jackett_default:
+    external: true
+  torrent_default:
+    external: true
